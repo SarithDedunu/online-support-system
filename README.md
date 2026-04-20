@@ -1,59 +1,136 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Laravel Support System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## 📌 Project Overview
 
-## About Laravel
+This project is a web-based **Support Ticket System** built using Laravel. It allows customers to submit support requests, receive a unique reference number, and track their tickets without requiring user registration.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+The system is developed to demonstrate how user requirements (user stories) can be converted into application features while applying core Laravel concepts such as MVC architecture, routing, controllers, models, migrations, and validation.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🎯 Features
 
-## Learning Laravel
+### 👤 Customer Features
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+* Create a support ticket
+* Receive a unique ticket reference number
+* View ticket details using the reference
+* Track ticket status
+* Reply to existing tickets
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 👨‍💻 Support Agent Features
 
-## Laravel Sponsors
+* View all support tickets
+* Search tickets by reference
+* View customer details and ticket history
+* Reply to tickets
+* Update ticket status (new, in progress, resolved, closed)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## 🌿 Git Workflow
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+This project follows a **feature branch workflow**:
 
-## Contributing
+* `main` → stable base project
+* `feature/ticket-creation-and-view`
+* `feature/ticket-replies`
+* `feature/agent-ticket-management`
+* `feature/ticket-status`
+* `feature/notifications`
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Each feature is developed in a separate branch and merged into the `main` branch.
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 🧱 System Design
 
-## Security Vulnerabilities
+The application follows the **MVC (Model-View-Controller)** architecture:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+* **Model** → Handles database operations (`Ticket`, `TicketReply`)
+* **View** → User interface using Blade templates
+* **Controller** → Handles business logic and request processing
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## ⚙️ Installation Guide
+
+### 1. Clone the Repository
+
+```bash id="j0k9dp"
+git clone <your-repo-url>
+cd support-system
+```
+
+### 2. Install Dependencies
+
+```bash id="6p73rd"
+composer install
+```
+
+### 3. Setup Environment
+
+```bash id="kp8g3x"
+cp .env.example .env
+```
+
+Update database configuration:
+
+```env id="4qz5o9"
+DB_DATABASE=support_system
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+### 4. Generate Application Key
+
+```bash id="6e0cs2"
+php artisan key:generate
+```
+
+### 5. Run Migrations
+
+```bash id="lzt6zj"
+php artisan migrate
+```
+
+### 6. Start the Server
+
+```bash id="y9c1xr"
+php artisan serve
+```
+
+Visit:
+
+```id="0zq79s"
+http://127.0.0.1:8000
+```
+
+---
+
+## 📚 Learning Objectives
+
+* Convert user stories into application features
+* Design and manage database schema using migrations
+* Implement CRUD operations in Laravel
+* Use routing, controllers, and models effectively
+* Apply validation and CSRF protection
+* Practice feature-based development using Git branching
+
+---
+
+## 🚀 Future Improvements
+
+* Email notifications for ticket updates
+* Support agent authentication system
+* Ticket categorization
+* File attachments for tickets
+* Improved UI using Bootstrap or Tailwind
+
+---
+
+## 👤 Author
+
+* Sarith Dedunu
+
+---
