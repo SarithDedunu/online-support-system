@@ -11,7 +11,6 @@
 
 <hr>
 
-<<<<<<< HEAD
 <!-- Error Message -->
 @if(session('error'))
     <p style="color:red;">{{ session('error') }}</p>
