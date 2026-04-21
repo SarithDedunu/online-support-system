@@ -39,6 +39,17 @@ class TicketController extends Controller
             ->with('success', 'Ticket created successfully. Your reference is: ' . $ticket->ref);
     }
 
+    public function search(Request $request)
+    {
+        $ticket = Ticket::where('ref', $request->query('reference'))->first();
+
+        if ($ticket) {
+            return redirect()->route('tickets.show', $ticket->id);
+        }
+
+        return redirect()->back()->with('error', 'Ticket not found');
+    }
+
     public function reply(Request $request, Ticket $ticket)
     {
         $request->validate([
@@ -55,5 +66,12 @@ class TicketController extends Controller
         return redirect()
             ->route('tickets.show', $ticket->id)
             ->with('success', 'Reply added successfully.');
+    }
+
+    public function show(Ticket $ticket)
+    {
+        $ticket->load('replies');
+
+        return view('tickets.show', compact('ticket'));
     }
 }
