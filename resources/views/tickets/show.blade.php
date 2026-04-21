@@ -7,6 +7,7 @@
 
 <h1>Ticket Details</h1>
 
+<<<<<<< HEAD
 @if(session('success'))
     <p style="color: green;">{{ session('success') }}</p>
 @endif
@@ -23,6 +24,10 @@
             @endforeach
         </ul>
     </div>
+=======
+@if(session('error'))
+    <p style="color:red">{{ session('error') }}</p>
+>>>>>>> 9ec915e15be4861c5c5869446f4dec50eb1a16f8
 @endif
 
 <table border="1">
@@ -56,6 +61,7 @@
     </tr>
 </table>
 
+<<<<<<< HEAD
 <hr>
 
 <h2>Replies</h2>
@@ -99,5 +105,7 @@
     <button type="submit">Send Reply</button>
 </form>
 
+=======
+>>>>>>> 9ec915e15be4861c5c5869446f4dec50eb1a16f8
 </body>
 </html>

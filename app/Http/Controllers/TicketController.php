@@ -50,6 +50,7 @@ class TicketController extends Controller
         return redirect()->back()->with('error', 'Ticket not found');
     }
 
+
     public function reply(Request $request, Ticket $ticket)
     {
         $request->validate([
@@ -71,7 +72,7 @@ class TicketController extends Controller
     public function show(Ticket $ticket)
     {
         $ticket->load('replies');
-
+        
         return view('tickets.show', compact('ticket'));
     }
 }
