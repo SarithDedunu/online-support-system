@@ -15,4 +15,8 @@ class Ticket extends Model
         'ref',
         'status',
     ];
+        public function replies()
+    {
+        return $this->hasMany(TicketReply::class);
+    }
 }
