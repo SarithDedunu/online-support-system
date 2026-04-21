@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ticket;
+use App\Models\TicketReply;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -36,5 +37,23 @@ class TicketController extends Controller
         return redirect()
             ->route('tickets.create')
             ->with('success', 'Ticket created successfully. Your reference is: ' . $ticket->ref);
+    }
+
+    public function reply(Request $request, Ticket $ticket)
+    {
+        $request->validate([
+            'message' => 'required',
+            'sender_type' => 'required|in:customer,agent',
+        ]);
+
+        TicketReply::create([
+            'ticket_id' => $ticket->id,
+            'sender_type' => $request->sender_type,
+            'message' => $request->message,
+        ]);
+
+        return redirect()
+            ->route('tickets.show', $ticket->id)
+            ->with('success', 'Reply added successfully.');
     }
 }

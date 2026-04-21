@@ -11,4 +11,9 @@ class TicketReply extends Model
         'sender_type',
         'message',
     ];
+
+    public function ticket()
+    {
+        return $this->belongsTo(Ticket::class);
+    }
 }
