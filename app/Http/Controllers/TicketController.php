@@ -37,4 +37,20 @@ class TicketController extends Controller
             ->route('tickets.create')
             ->with('success', 'Ticket created successfully. Your reference is: ' . $ticket->ref);
     }
+
+    public function search(Request $request)
+    {
+        $ticket = Ticket::where('ref', $request->query('reference'))->first();
+
+        if ($ticket) {
+            return redirect()->route('tickets.show', $ticket->id);
+        }
+
+        return redirect()->back()->with('error', 'Ticket not found');
+    }
+
+    public function show(Ticket $ticket)
+    {
+        return view('tickets.show', compact('ticket'));
+    }
 }
