@@ -14,7 +14,6 @@ Route::post('/tickets', [TicketController::class, 'store'])->name('tickets.store
 Route::get('/tickets/search', [TicketController::class, 'search'])->name('tickets.search');
 
 Route::get('/tickets/{ticket}', [TicketController::class, 'show'])->name('tickets.show');
-
 Route::post('/tickets/{ticket}/replies', [TicketController::class, 'reply'])->name('tickets.reply');
 
 
