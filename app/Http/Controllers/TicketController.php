@@ -77,21 +77,11 @@ class TicketController extends Controller
     }
 
     public function index(Request $request)
-{
-    $query = Ticket::query();
+    {
+        $tickets = Ticket::latest()->paginate(10);
 
-    if ($request->filled('search')) {
-        $search = $request->search;
+        return view('tickets.index', compact('tickets'));
 
-        $query->where(function ($q) use ($search) {
-            $q->where('ref', 'like', "%{$search}%")
-              ->orWhere('email', 'like', "%{$search}%")
-              ->orWhere('subject', 'like', "%{$search}%");
-        });
     }
 
-    $tickets = $query->latest()->paginate(10);
-
-    return view('tickets.index', compact('tickets'));
-}
 }

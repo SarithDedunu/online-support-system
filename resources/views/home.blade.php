@@ -25,5 +25,8 @@
     <button type="submit">Search</button>
 </form>
 
+<br><br>
+<a href="{{ route('tickets.index') }}">Agent Ticket Management</a>
+
 </body>
 </html>
