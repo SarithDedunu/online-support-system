@@ -84,23 +84,16 @@
 
 <hr>
 
-<h2>Add Reply</h2>
+<h3>Add Reply</h3>
 
-<form action="{{ route('tickets.reply', $ticket->id) }}" method="POST">
+<form method="POST" action="{{ route('tickets.reply', $ticket->id) }}">
     @csrf
 
-    <div>
-        <input type="hidden" name="sender_type" value="agent">
-    </div>
+    <input type="hidden" name="sender_type" value="agent">
 
-    <br>
+    <textarea name="message" placeholder="Type your reply"></textarea>
 
-    <div>
-        <label>Message</label><br>
-        <textarea name="message"></textarea>
-    </div>
-
-    <br>
+    <br><br>
 
     <button type="submit">Send Reply</button>
 </form>
