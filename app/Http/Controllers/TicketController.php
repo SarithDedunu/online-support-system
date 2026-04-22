@@ -75,4 +75,13 @@ class TicketController extends Controller
         
         return view('tickets.show', compact('ticket'));
     }
+
+    public function index(Request $request)
+    {
+        $tickets = Ticket::latest()->paginate(10);
+
+        return view('tickets.index', compact('tickets'));
+
+    }
+
 }

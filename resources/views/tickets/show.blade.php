@@ -7,7 +7,6 @@
 
 <h1>Ticket Details</h1>
 
-<<<<<<< HEAD
 @if(session('success'))
     <p style="color: green;">{{ session('success') }}</p>
 @endif
@@ -24,10 +23,6 @@
             @endforeach
         </ul>
     </div>
-=======
-@if(session('error'))
-    <p style="color:red">{{ session('error') }}</p>
->>>>>>> 9ec915e15be4861c5c5869446f4dec50eb1a16f8
 @endif
 
 <table border="1">
@@ -57,11 +52,20 @@
     </tr>
     <tr>
         <th>Status</th>
-        <td>{{ $ticket->status }}</td>
+        <td>
+            @if($ticket->status == 0)
+                New
+            @elseif($ticket->status == 1)
+                In Progress
+            @elseif($ticket->status == 2)
+                Resolved
+            @else
+                Closed
+            @endif
+        </td>
     </tr>
 </table>
 
-<<<<<<< HEAD
 <hr>
 
 <h2>Replies</h2>
@@ -80,32 +84,19 @@
 
 <hr>
 
-<h2>Add Reply</h2>
+<h3>Add Reply</h3>
 
-<form action="{{ route('tickets.reply', $ticket->id) }}" method="POST">
+<form method="POST" action="{{ route('tickets.reply', $ticket->id) }}">
     @csrf
 
-    <div>
-        <label>Sender Type</label><br>
-        <select name="sender_type">
-            <option value="customer">Customer</option>
-            <option value="agent">Agent</option>
-        </select>
-    </div>
+    <input type="hidden" name="sender_type" value="agent">
 
-    <br>
+    <textarea name="message" placeholder="Type your reply"></textarea>
 
-    <div>
-        <label>Message</label><br>
-        <textarea name="message"></textarea>
-    </div>
-
-    <br>
+    <br><br>
 
     <button type="submit">Send Reply</button>
 </form>
 
-=======
->>>>>>> 9ec915e15be4861c5c5869446f4dec50eb1a16f8
 </body>
 </html>
