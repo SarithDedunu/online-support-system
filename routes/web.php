@@ -14,3 +14,5 @@ Route::get('/tickets/{ticket}', [TicketController::class, 'show'])->name('ticket
 Route::post('/tickets/{ticket}/replies', [TicketController::class, 'reply'])->name('tickets.reply');
 
 Route::get('/agent/tickets', [TicketController::class, 'index'])->name('tickets.index');
+Route::patch('/tickets/{ticket}/status', [TicketController::class, 'updateStatus'])
+    ->name('tickets.updateStatus');
