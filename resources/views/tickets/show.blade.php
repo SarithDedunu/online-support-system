@@ -98,5 +98,39 @@
     <button type="submit">Send Reply</button>
 </form>
 
+<hr>
+
+
+
+<h2>Update Status</h2>
+
+<form method="POST" action="{{ route('tickets.updateStatus', $ticket->id) }}">
+    @csrf
+    @method('PATCH')
+
+    <select name="status">
+        <option value="0" {{ $ticket->status == 0 ? 'selected' : '' }}>New</option>
+        <option value="1" {{ $ticket->status == 1 ? 'selected' : '' }}>In Progress</option>
+        <option value="2" {{ $ticket->status == 2 ? 'selected' : '' }}>Resolved</option>
+        <option value="3" {{ $ticket->status == 3 ? 'selected' : '' }}>Closed</option>
+    </select>
+
+    <button type="submit">Update Status</button>
+</form>
+
+
+<hr>
+
+<h2>Close Ticket</h2>
+
+<form method="POST" action="{{ route('tickets.updateStatus', $ticket->id) }}">
+    @csrf
+    @method('PATCH')
+
+    <input type="hidden" name="status" value="3">
+
+    <button type="submit">Close Ticket</button>
+</form>
+
 </body>
 </html>
