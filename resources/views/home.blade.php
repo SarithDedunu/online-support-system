@@ -1,32 +1,38 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Support System</title>
-</head>
-<body>
+@extends('layouts.app')
 
-<h1>Support System</h1>
+@section('content')
 
-<a href="{{ route('tickets.create') }}">Open New Ticket</a>
+<div class="row justify-content-center text-center">
+    <div class="col-lg-6 col-md-8">
 
-<hr>
+        <h1 class="fw-bold mb-4">Support System</h1>
 
-<!-- Error Message -->
-@if(session('error'))
-    <p style="color:red;">{{ session('error') }}</p>
-@endif
+        <div class="mb-4">
+            <a href="{{ route('tickets.create') }}" class="btn btn-primary px-4 py-2">
+                Open New Ticket
+            </a>
+        </div>
 
-<!-- Search Form -->
+        <div class="mb-3">
+            <p class="text-muted mb-2">Check the status of your ticket:</p>
+        </div>
 
-<h3>Check Your Ticket</h3>
+        <form action="{{ route('tickets.search') }}" method="GET">
+            <div class="d-flex gap-2 justify-content-center">
+                <input
+                    type="text"
+                    name="reference"
+                    class="form-control"
+                    style="max-width: 300px;"
+                    placeholder="Enter ticket reference"
+                >
+                <button class="btn btn-success px-3">
+                    View Ticket
+                </button>
+            </div>
+        </form>
 
-<form action="{{ route('tickets.search') }}" method="GET">
-    <input type="text" name="reference" placeholder="Enter ticket reference">
-    <button type="submit">Search</button>
-</form>
+    </div>
+</div>
 
-<br><br>
-<a href="{{ route('tickets.index') }}">Agent Ticket Management</a>
-
-</body>
-</html>
+@endsection
