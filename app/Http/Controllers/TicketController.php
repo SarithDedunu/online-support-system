@@ -72,8 +72,14 @@ class TicketController extends Controller
     public function show(Ticket $ticket)
     {
         $ticket->load('replies');
-        
         return view('tickets.show', compact('ticket'));
+    }
+
+    public function agentShow(Ticket $ticket)
+    {
+        $ticket->load('replies');
+
+        return view('tickets.agent-show', compact('ticket'));
     }
 
     public function index(Request $request)
@@ -82,6 +88,21 @@ class TicketController extends Controller
 
         return view('tickets.index', compact('tickets'));
 
+    }
+
+    public function updateStatus(Request $request, Ticket $ticket)
+    {
+        $request->validate([
+            'status' => 'required|in:0,1,2,3',
+        ]);
+
+        $ticket->update([
+            'status' => $request->status,
+        ]);
+
+        return redirect()
+            ->route('tickets.show', $ticket->id)
+            ->with('success', 'Ticket status updated successfully.');
     }
 
 }
