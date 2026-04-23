@@ -2,101 +2,110 @@
 <html>
 <head>
     <title>Ticket Details</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; background: #f7f7f7; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px; }
+        .reply { border-left: 4px solid #ccc; padding: 10px; margin-bottom: 10px; background: #fafafa; }
+        .customer { border-left-color: #2d89ef; }
+        .agent { border-left-color: #28a745; }
+        textarea { width: 100%; height: 100px; }
+        button { padding: 8px 14px; }
+        table { width: 100%; border-collapse: collapse; background: white; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background: #f0f0f0; width: 180px; }
+    </style>
 </head>
 <body>
 
-<h1>Ticket Details</h1>
+<div class="card">
+    <h1>Your Ticket</h1>
 
-@if(session('success'))
-    <p style="color: green;">{{ session('success') }}</p>
-@endif
+    @if(session('success'))
+        <p style="color: green;">{{ session('success') }}</p>
+    @endif
 
-@if(session('error'))
-    <p style="color: red;">{{ session('error') }}</p>
-@endif
+    @if(session('error'))
+        <p style="color: red;">{{ session('error') }}</p>
+    @endif
 
-@if($errors->any())
-    <div style="color: red;">
-        <ul>
-            @foreach($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
-
-<table border="1">
-    <tr>
-        <th>Reference</th>
-        <td>{{ $ticket->ref }}</td>
-    </tr>
-    <tr>
-        <th>Name</th>
-        <td>{{ $ticket->customer_name }}</td>
-    </tr>
-    <tr>
-        <th>Email</th>
-        <td>{{ $ticket->email }}</td>
-    </tr>
-    <tr>
-        <th>Phone</th>
-        <td>{{ $ticket->phone }}</td>
-    </tr>
-    <tr>
-        <th>Subject</th>
-        <td>{{ $ticket->subject }}</td>
-    </tr>
-    <tr>
-        <th>Description</th>
-        <td>{{ $ticket->description }}</td>
-    </tr>
-    <tr>
-        <th>Status</th>
-        <td>
-            @if($ticket->status == 0)
-                New
-            @elseif($ticket->status == 1)
-                In Progress
-            @elseif($ticket->status == 2)
-                Resolved
-            @else
-                Closed
-            @endif
-        </td>
-    </tr>
-</table>
-
-<hr>
-
-<h2>Replies</h2>
-
-@if($ticket->replies->count())
-    @foreach($ticket->replies as $reply)
-        <div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
-            <strong>{{ ucfirst($reply->sender_type) }}</strong><br>
-            <small>{{ $reply->created_at }}</small>
-            <p>{{ $reply->message }}</p>
+    @if($errors->any())
+        <div style="color: red;">
+            <ul>
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
         </div>
-    @endforeach
-@else
-    <p>No replies yet.</p>
-@endif
+    @endif
 
-<hr>
+    <table>
+        <tr>
+            <th>Reference</th>
+            <td>{{ $ticket->ref }}</td>
+        </tr>
+        <tr>
+            <th>Name</th>
+            <td>{{ $ticket->customer_name }}</td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td>{{ $ticket->email }}</td>
+        </tr>
+        <tr>
+            <th>Phone</th>
+            <td>{{ $ticket->phone }}</td>
+        </tr>
+        <tr>
+            <th>Subject</th>
+            <td>{{ $ticket->subject }}</td>
+        </tr>
+        <tr>
+            <th>Description</th>
+            <td>{{ $ticket->description }}</td>
+        </tr>
+        <tr>
+            <th>Status</th>
+            <td>
+                @if($ticket->status == 0)
+                    New
+                @elseif($ticket->status == 1)
+                    In Progress
+                @elseif($ticket->status == 2)
+                    Resolved
+                @else
+                    Closed
+                @endif
+            </td>
+        </tr>
+    </table>
+</div>
 
-<h3>Add Reply</h3>
+<div class="card">
+    <h2>Replies</h2>
 
-<form method="POST" action="{{ route('tickets.reply', $ticket->id) }}">
-    @csrf
+    @if($ticket->replies->count())
+        @foreach($ticket->replies as $reply)
+            <div class="reply {{ $reply->sender_type }}">
+                <strong>{{ ucfirst($reply->sender_type) }}</strong><br>
+                <small>{{ $reply->created_at }}</small>
+                <p>{{ $reply->message }}</p>
+            </div>
+        @endforeach
+    @else
+        <p>No replies yet.</p>
+    @endif
+</div>
 
-    <input type="hidden" name="sender_type" value="agent">
+<div class="card">
+    <h2>Add Reply</h2>
 
-    <textarea name="message" placeholder="Type your reply"></textarea>
-
-    <br><br>
-
-    <button type="submit">Send Reply</button>
-</form>
+    <form method="POST" action="{{ route('tickets.reply.customer', $ticket->id) }}">
+        @csrf
+        <textarea name="message" placeholder="Type your reply"></textarea>
+        <br><br>
+        <button type="submit">Send Reply</button>
+    </form>
+</div>
 
 </body>
 </html>

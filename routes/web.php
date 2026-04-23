@@ -14,13 +14,11 @@ Route::get('/tickets/search', [TicketController::class, 'search'])->name('ticket
 Route::get('/tickets/{ticket}', [TicketController::class, 'show'])->name('tickets.show');
 Route::post('/tickets/{ticket}/reply', [TicketController::class, 'replyAsCustomer'])->name('tickets.reply.customer');
 
-
 // Agent routes
 Route::get('/agent/tickets', [TicketController::class, 'index'])->name('tickets.index');
 Route::get('/agent/tickets/{ticket}', [TicketController::class, 'agentShow'])->name('tickets.agent.show');
 Route::post('/agent/tickets/{ticket}/reply', [TicketController::class, 'replyAsAgent'])->name('tickets.reply.agent');
 
-// Status update (shared logic)
+// Status update
 Route::patch('/tickets/{ticket}/status', [TicketController::class, 'updateStatus'])
     ->name('tickets.updateStatus');
-
