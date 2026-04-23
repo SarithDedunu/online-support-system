@@ -1,53 +1,49 @@
-<h1>Agent Ticket Management</h1>
+@extends('layouts.app')
 
-<form action="{{ route('tickets.index') }}" method="GET">
-    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search">
-    <button type="submit">Search</button>
+@section('content')
+
+<a href="/" class="btn btn-secondary mb-3">← Back</a>
+
+<h3>Agent Ticket List</h3>
+
+<form method="GET" class="mb-3">
+    <input type="text" name="search" class="form-control" placeholder="Search tickets">
 </form>
 
-<br>
+<table class="table table-bordered">
+    <thead class="table-success">
+        <tr>
+            <th>Ref</th>
+            <th>Subject</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+    </thead>
 
-@if($tickets->count())
-<table border="1" cellpadding="8">
-    <tr>
-        <th>Reference</th>
-        <th>Subject</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Status</th>
-        <th>Created</th>
-        <th>Action</th>
-    </tr>
-
-    @foreach($tickets as $ticket)
-    <tr>
-        <td>{{ $ticket->ref }}</td>
-        <td>{{ $ticket->subject }}</td>
-        <td>{{ $ticket->customer_name }}</td>
-        <td>{{ $ticket->email }}</td>
-        <td>
-            @if($ticket->status == 0)
-                New
-            @elseif($ticket->status == 1)
-                In Progress
-            @elseif($ticket->status == 2)
-                Resolved
-            @else
-                Closed
-            @endif
-        </td>
-        <td>{{ $ticket->created_at }}</td>
-        <td>
-            <a href="{{ route('tickets.agent.show', $ticket->id) }}">Open</a>
-        </td>
-    </tr>
-    @endforeach
+    <tbody>
+        @foreach($tickets as $ticket)
+        <tr>
+            <td>{{ $ticket->ref }}</td>
+            <td>{{ $ticket->subject }}</td>
+            <td>{{ $ticket->email }}</td>
+            <td>
+                @if($ticket->status == 0) <span class="badge bg-secondary">New</span>
+                @elseif($ticket->status == 1) <span class="badge bg-warning">In Progress</span>
+                @elseif($ticket->status == 2) <span class="badge bg-success">Resolved</span>
+                @else <span class="badge bg-dark">Closed</span>
+                @endif
+            </td>
+            <td>
+                <a href="{{ route('tickets.agent.show', $ticket->id) }}" class="btn btn-sm btn-primary">
+                    Open
+                </a>
+            </td>
+        </tr>
+        @endforeach
+    </tbody>
 </table>
-
-<br>
 
 {{ $tickets->links() }}
 
-@else
-<p>No tickets found</p>
-@endif
+@endsection

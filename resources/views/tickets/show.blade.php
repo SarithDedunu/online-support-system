@@ -1,111 +1,99 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Ticket Details</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 30px; background: #f7f7f7; }
-        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px; }
-        .reply { border-left: 4px solid #ccc; padding: 10px; margin-bottom: 10px; background: #fafafa; }
-        .customer { border-left-color: #2d89ef; }
-        .agent { border-left-color: #28a745; }
-        textarea { width: 100%; height: 100px; }
-        button { padding: 8px 14px; }
-        table { width: 100%; border-collapse: collapse; background: white; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        th { background: #f0f0f0; width: 180px; }
-    </style>
-</head>
-<body>
+@extends('layouts.app')
 
-<div class="card">
-    <h1>Your Ticket</h1>
+@section('content')
 
-    @if(session('success'))
-        <p style="color: green;">{{ session('success') }}</p>
-    @endif
+<a href="/" class="btn btn-secondary mb-3">← Back</a>
 
-    @if(session('error'))
-        <p style="color: red;">{{ session('error') }}</p>
-    @endif
+<h3 class="mb-4">Ticket Details</h3>
 
-    @if($errors->any())
-        <div style="color: red;">
-            <ul>
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+<div class="card shadow-sm mb-4">
+    <div class="card-body p-0">
 
-    <table>
-        <tr>
-            <th>Reference</th>
-            <td>{{ $ticket->ref }}</td>
-        </tr>
-        <tr>
-            <th>Name</th>
-            <td>{{ $ticket->customer_name }}</td>
-        </tr>
-        <tr>
-            <th>Email</th>
-            <td>{{ $ticket->email }}</td>
-        </tr>
-        <tr>
-            <th>Phone</th>
-            <td>{{ $ticket->phone }}</td>
-        </tr>
-        <tr>
-            <th>Subject</th>
-            <td>{{ $ticket->subject }}</td>
-        </tr>
-        <tr>
-            <th>Description</th>
-            <td>{{ $ticket->description }}</td>
-        </tr>
-        <tr>
-            <th>Status</th>
-            <td>
-                @if($ticket->status == 0)
-                    New
-                @elseif($ticket->status == 1)
-                    In Progress
-                @elseif($ticket->status == 2)
-                    Resolved
-                @else
-                    Closed
-                @endif
-            </td>
-        </tr>
-    </table>
+        <table class="table align-middle mb-0 modern-table">
+            <tbody>
+
+                <tr>
+                    <th>Reference</th>
+                    <td>{{ $ticket->ref }}</td>
+                </tr>
+
+                <tr>
+                    <th>Customer</th>
+                    <td>{{ $ticket->customer_name }}</td>
+                </tr>
+
+                <tr>
+                    <th>Email</th>
+                    <td>{{ $ticket->email }}</td>
+                </tr>
+
+                <tr>
+                    <th>Phone</th>
+                    <td>{{ $ticket->phone ?: 'N/A' }}</td>
+                </tr>
+
+                <tr>
+                    <th>Subject</th>
+                    <td class="fw-semibold">{{ $ticket->subject }}</td>
+                </tr>
+
+                <tr>
+                    <th>Description</th>
+                    <td>{{ $ticket->description }}</td>
+                </tr>
+
+                <tr>
+                    <th>Status</th>
+                    <td>
+                        @if($ticket->status == 0)
+                            <span class="badge rounded-pill bg-secondary px-3 py-2">New</span>
+                        @elseif($ticket->status == 1)
+                            <span class="badge rounded-pill bg-warning text-dark px-3 py-2">In Progress</span>
+                        @elseif($ticket->status == 2)
+                            <span class="badge rounded-pill bg-success px-3 py-2">Resolved</span>
+                        @else
+                            <span class="badge rounded-pill bg-dark px-3 py-2">Closed</span>
+                        @endif
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+
+    </div>
 </div>
 
-<div class="card">
-    <h2>Replies</h2>
+<h5 class="mb-3">Replies</h5>
 
-    @if($ticket->replies->count())
-        @foreach($ticket->replies as $reply)
-            <div class="reply {{ $reply->sender_type }}">
-                <strong>{{ ucfirst($reply->sender_type) }}</strong><br>
-                <small>{{ $reply->created_at }}</small>
-                <p>{{ $reply->message }}</p>
+@if($ticket->replies->count())
+    @foreach($ticket->replies as $reply)
+        <div class="card mb-2">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <strong>{{ ucfirst($reply->sender_type) }}</strong>
+                    <small class="text-muted">{{ $reply->created_at }}</small>
+                </div>
+                <p class="mb-0">{{ $reply->message }}</p>
             </div>
-        @endforeach
-    @else
-        <p>No replies yet.</p>
-    @endif
-</div>
+        </div>
+    @endforeach
+@else
+    <div class="alert alert-light border">No replies yet.</div>
+@endif
 
-<div class="card">
-    <h2>Add Reply</h2>
+<hr>
 
-    <form method="POST" action="{{ route('tickets.reply.customer', $ticket->id) }}">
-        @csrf
-        <textarea name="message" placeholder="Type your reply"></textarea>
-        <br><br>
-        <button type="submit">Send Reply</button>
-    </form>
-</div>
+<h5 class="mb-3">Add Reply</h5>
 
-</body>
-</html>
+<form method="POST" action="{{ route('tickets.reply.customer', $ticket->id) }}">
+    @csrf
+    <textarea
+        name="message"
+        class="form-control mb-3"
+        rows="4"
+        placeholder="Type your reply here..."
+    ></textarea>
+    <button class="btn btn-primary">Send Reply</button>
+</form>
+
+@endsection

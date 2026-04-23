@@ -1,66 +1,27 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Open Support Ticket</title>
-</head>
-<body>
-    <h1>Open Support Ticket</h1>
+@extends('layouts.app')
 
-    @if(session('success'))
-        <p style="color: green;">
-            {{ session('success') }}
-        </p>
-    @endif
+@section('content')
 
-    @if($errors->any())
-        <div style="color: red;">
-            <ul>
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+<a href="/" class="btn btn-secondary mb-3">← Back</a>
 
-    <form action="{{ route('tickets.store') }}" method="POST">
-        @csrf
+<h3>Create Ticket</h3>
 
-        <div>
-            <label>Your Name</label><br>
-            <input type="text" name="customer_name" value="{{ old('customer_name') }}">
-        </div>
+@if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
 
-        <br>
+<form method="POST" action="{{ route('tickets.store') }}">
+    @csrf
 
-        <div>
-            <label>Email</label><br>
-            <input type="text" name="email" value="{{ old('email') }}">
-        </div>
+    <input class="form-control mb-2" name="customer_name" placeholder="Name">
+    <input class="form-control mb-2" name="email" placeholder="Email">
+    <input class="form-control mb-2" name="phone" placeholder="Phone">
+    <input class="form-control mb-2" name="subject" placeholder="Subject">
+    <textarea class="form-control mb-2" name="description" placeholder="Description"></textarea>
 
-        <br>
+    <button class="btn btn-primary">Submit</button>
+</form>
 
-        <div>
-            <label>Phone</label><br>
-            <input type="text" name="phone" value="{{ old('phone') }}">
-        </div>
-
-        <br>
-
-        <div>
-            <label>Subject</label><br>
-            <input type="text" name="subject" value="{{ old('subject') }}">
-        </div>
-
-        <br>
-
-        <div>
-            <label>Description</label><br>
-            <textarea name="description">{{ old('description') }}</textarea>
-        </div>
-
-        <br>
-
-        <button type="submit">Submit Ticket</button>
-    </form>
-</body>
-</html>
+@endsection
