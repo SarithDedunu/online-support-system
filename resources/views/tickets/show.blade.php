@@ -65,35 +65,78 @@
 
 <h5 class="mb-3">Replies</h5>
 
-@if($ticket->replies->count())
-    @foreach($ticket->replies as $reply)
-        <div class="card mb-2">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <strong>{{ ucfirst($reply->sender_type) }}</strong>
-                    <small class="text-muted">{{ $reply->created_at }}</small>
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+
+        <h5 class="mb-3">Replies</h5>
+
+        @if($ticket->replies->count())
+            @foreach($ticket->replies as $reply)
+                <div class="border rounded p-3 mb-2">
+                    <div class="d-flex justify-content-between mb-2">
+                        <strong>{{ ucfirst($reply->sender_type) }}</strong>
+                        <small class="text-muted">{{ $reply->created_at }}</small>
+                    </div>
+                    <p class="mb-0">{{ $reply->message }}</p>
                 </div>
-                <p class="mb-0">{{ $reply->message }}</p>
+            @endforeach
+        @else
+            <div class="alert alert-light border">No replies yet.</div>
+        @endif
+
+    </div>
+</div>
+
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+
+        <h5 class="mb-3">Add Reply</h5>
+
+        <form method="POST" action="{{ route('tickets.reply.customer', $ticket->id) }}">
+            @csrf
+
+            <textarea
+                name="message"
+                class="form-control mb-3"
+                rows="4"
+                placeholder="Type your reply here..."
+            ></textarea>
+
+            <div class="d-flex justify-content-between">
+                
+                <button class="btn btn-primary">
+                    Send Reply
+                </button>
+
             </div>
+        </form>
+
+    </div>
+</div>
+
+
+
+@if($ticket->status != 3)
+    <div class="card shadow-sm mb-4">
+        <div class="card-body d-flex justify-content-between align-items-center">
+
+            <div>
+                <h6 class="mb-1">Finished with this issue?</h6>
+                <small class="text-muted">You can close the ticket</small>
+            </div>
+
+            <form method="POST" action="{{ route('tickets.close', $ticket->id) }}">
+                @csrf
+                @method('PATCH')
+
+                <button type="submit" class="btn btn-danger">
+                    Close Ticket
+                </button>
+            </form>
+
         </div>
-    @endforeach
-@else
-    <div class="alert alert-light border">No replies yet.</div>
+    </div>
 @endif
-
-<hr>
-
-<h5 class="mb-3">Add Reply</h5>
-
-<form method="POST" action="{{ route('tickets.reply.customer', $ticket->id) }}">
-    @csrf
-    <textarea
-        name="message"
-        class="form-control mb-3"
-        rows="4"
-        placeholder="Type your reply here..."
-    ></textarea>
-    <button class="btn btn-primary">Send Reply</button>
-</form>
 
 @endsection
