@@ -2,16 +2,16 @@
 
 @section('content')
 
+{{-- Back button --}}
 <a href="/" class="btn btn-secondary mb-3">← Back</a>
 
 <h3 class="mb-4">Ticket Details</h3>
 
+{{-- Ticket details --}}
 <div class="card shadow-sm mb-4">
     <div class="card-body p-0">
-
         <table class="table align-middle mb-0 modern-table">
             <tbody>
-
                 <tr>
                     <th>Reference</th>
                     <td>{{ $ticket->ref }}</td>
@@ -56,18 +56,14 @@
                         @endif
                     </td>
                 </tr>
-
             </tbody>
         </table>
-
     </div>
 </div>
 
-<h5 class="mb-3">Replies</h5>
-
+{{-- Replies section --}}
 <div class="card shadow-sm mb-4">
     <div class="card-body">
-
         <h5 class="mb-3">Replies</h5>
 
         @if($ticket->replies->count())
@@ -83,14 +79,12 @@
         @else
             <div class="alert alert-light border">No replies yet.</div>
         @endif
-
     </div>
 </div>
 
-
+{{-- Customer reply form --}}
 <div class="card shadow-sm mb-4">
     <div class="card-body">
-
         <h5 class="mb-3">Add Reply</h5>
 
         <form method="POST" action="{{ route('tickets.reply.customer', $ticket->id) }}">
@@ -103,24 +97,15 @@
                 placeholder="Type your reply here..."
             ></textarea>
 
-            <div class="d-flex justify-content-between">
-                
-                <button class="btn btn-primary">
-                    Send Reply
-                </button>
-
-            </div>
+            <button class="btn btn-primary">Send Reply</button>
         </form>
-
     </div>
 </div>
 
-
-
+{{-- Close ticket option --}}
 @if($ticket->status != 3)
     <div class="card shadow-sm mb-4">
         <div class="card-body d-flex justify-content-between align-items-center">
-
             <div>
                 <h6 class="mb-1">Finished with this issue?</h6>
                 <small class="text-muted">You can close the ticket</small>
@@ -134,7 +119,6 @@
                     Close Ticket
                 </button>
             </form>
-
         </div>
     </div>
 @endif

@@ -9,6 +9,11 @@ use Illuminate\Support\Str;
 
 class TicketController extends Controller
 {
+
+    // -------------------------
+    // TICKET CREATION (CUSTOMER)
+    // -------------------------
+
     public function create()
     {
         return view('tickets.create');
@@ -16,6 +21,7 @@ class TicketController extends Controller
 
     public function store(Request $request)
     {
+        // Validate input
         $request->validate([
             'customer_name' => 'required|max:200',
             'email' => 'required|email',
@@ -24,6 +30,7 @@ class TicketController extends Controller
             'phone' => 'nullable|max:50',
         ]);
 
+        // Create ticket
         $ticket = Ticket::create([
             'customer_name' => $request->customer_name,
             'email' => $request->email,
@@ -39,6 +46,10 @@ class TicketController extends Controller
             ->with('success', 'Ticket created successfully. Your reference is: ' . $ticket->ref);
     }
 
+    // -------------------------
+    // TICKET SEARCH (CUSTOMER)
+    // -------------------------
+
     public function search(Request $request)
     {
         $ticket = Ticket::where('ref', $request->query('reference'))->first();
@@ -50,7 +61,11 @@ class TicketController extends Controller
         return redirect()->back()->with('error', 'Ticket not found');
     }
 
+    // -------------------------
+    // REPLIES
+    // -------------------------
 
+    // Customer reply
     public function replyAsCustomer(Request $request, Ticket $ticket)
     {
         $request->validate([
@@ -67,7 +82,8 @@ class TicketController extends Controller
             ->route('tickets.show', $ticket->id)
             ->with('success', 'Reply added successfully.');
     }
-    
+
+    // Agent reply
     public function replyAsAgent(Request $request, Ticket $ticket)
     {
         $request->validate([
@@ -85,13 +101,19 @@ class TicketController extends Controller
             ->with('success', 'Agent reply was sent successfully.');
     }
 
+    // -------------------------
+    // VIEW TICKETS
+    // -------------------------
 
+    // Customer view
     public function show(Ticket $ticket)
     {
         $ticket->load('replies');
+
         return view('tickets.show', compact('ticket'));
     }
 
+    // Agent view
     public function agentShow(Ticket $ticket)
     {
         $ticket->load('replies');
@@ -99,25 +121,35 @@ class TicketController extends Controller
         return view('tickets.agent-show', compact('ticket'));
     }
 
+    // -------------------------
+    // AGENT DASHBOARD
+    // -------------------------
+
     public function index(Request $request)
     {
         $query = Ticket::query();
 
+        // Search filter
         if ($request->filled('search')) {
             $search = $request->search;
 
             $query->where(function ($q) use ($search) {
                 $q->where('ref', 'like', "%{$search}%")
-                ->orWhere('email', 'like', "%{$search}%")
-                ->orWhere('subject', 'like', "%{$search}%");
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('subject', 'like', "%{$search}%");
             });
-        }   
+        }
 
-    $tickets = $query->latest()->paginate(10);
+        $tickets = $query->latest()->paginate(10);
 
-    return view('tickets.index', compact('tickets'));
-}
+        return view('tickets.index', compact('tickets'));
+    }
 
+    // -------------------------
+    // STATUS MANAGEMENT
+    // -------------------------
+
+    // Agent updates status
     public function updateStatus(Request $request, Ticket $ticket)
     {
         $request->validate([
@@ -133,6 +165,7 @@ class TicketController extends Controller
             ->with('success', 'Ticket status updated successfully.');
     }
 
+    // Customer closes ticket
     public function closeTicket(Ticket $ticket)
     {
         if ($ticket->status == 3) {
@@ -149,5 +182,4 @@ class TicketController extends Controller
             ->route('tickets.show', $ticket->id)
             ->with('success', 'Your ticket was closed successfully.');
     }
-
 }
