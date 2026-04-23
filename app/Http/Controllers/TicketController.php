@@ -51,16 +51,15 @@ class TicketController extends Controller
     }
 
 
-    public function reply(Request $request, Ticket $ticket)
+    public function replyAsCustomer(Request $request, Ticket $ticket)
     {
         $request->validate([
             'message' => 'required',
-            'sender_type' => 'required|in:customer,agent',
         ]);
 
         TicketReply::create([
             'ticket_id' => $ticket->id,
-            'sender_type' => $request->sender_type,
+            'sender_type' => 'customer',
             'message' => $request->message,
         ]);
 
@@ -68,20 +67,70 @@ class TicketController extends Controller
             ->route('tickets.show', $ticket->id)
             ->with('success', 'Reply added successfully.');
     }
+    
+    public function replyAsAgent(Request $request, Ticket $ticket)
+    {
+        $request->validate([
+            'message' => 'required',
+        ]);
+
+        TicketReply::create([
+            'ticket_id' => $ticket->id,
+            'sender_type' => 'agent',
+            'message' => $request->message,
+        ]);
+
+        return redirect()
+            ->route('tickets.agent.show', $ticket->id)
+            ->with('success', 'Agent reply was sent successfully.');
+    }
+
 
     public function show(Ticket $ticket)
     {
         $ticket->load('replies');
-        
         return view('tickets.show', compact('ticket'));
+    }
+
+    public function agentShow(Ticket $ticket)
+    {
+        $ticket->load('replies');
+
+        return view('tickets.agent-show', compact('ticket'));
     }
 
     public function index(Request $request)
     {
-        $tickets = Ticket::latest()->paginate(10);
+        $query = Ticket::query();
 
-        return view('tickets.index', compact('tickets'));
+        if ($request->filled('search')) {
+            $search = $request->search;
 
+            $query->where(function ($q) use ($search) {
+                $q->where('ref', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%")
+                ->orWhere('subject', 'like', "%{$search}%");
+            });
+        }   
+
+    $tickets = $query->latest()->paginate(10);
+
+    return view('tickets.index', compact('tickets'));
+}
+
+    public function updateStatus(Request $request, Ticket $ticket)
+    {
+        $request->validate([
+            'status' => 'required|in:0,1,2,3',
+        ]);
+
+        $ticket->update([
+            'status' => $request->status,
+        ]);
+
+        return redirect()
+            ->route('tickets.show', $ticket->id)
+            ->with('success', 'Ticket status updated successfully.');
     }
 
 }
