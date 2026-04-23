@@ -133,4 +133,21 @@ class TicketController extends Controller
             ->with('success', 'Ticket status updated successfully.');
     }
 
+    public function closeTicket(Ticket $ticket)
+    {
+        if ($ticket->status == 3) {
+            return redirect()
+                ->route('tickets.show', $ticket->id)
+                ->with('error', 'This ticket is already closed.');
+        }
+
+        $ticket->update([
+            'status' => 3,
+        ]);
+
+        return redirect()
+            ->route('tickets.show', $ticket->id)
+            ->with('success', 'Your ticket was closed successfully.');
+    }
+
 }

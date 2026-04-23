@@ -14,6 +14,9 @@ Route::get('/tickets/search', [TicketController::class, 'search'])->name('ticket
 Route::get('/tickets/{ticket}', [TicketController::class, 'show'])->name('tickets.show');
 Route::post('/tickets/{ticket}/reply', [TicketController::class, 'replyAsCustomer'])->name('tickets.reply.customer');
 
+Route::patch('/tickets/{ticket}/close', [TicketController::class, 'closeTicket'])
+    ->name('tickets.close');
+
 // Agent routes
 Route::get('/agent/tickets', [TicketController::class, 'index'])->name('tickets.index');
 Route::get('/agent/tickets/{ticket}', [TicketController::class, 'agentShow'])->name('tickets.agent.show');
