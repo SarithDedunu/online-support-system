@@ -38,7 +38,7 @@
         </td>
         <td>{{ $ticket->created_at }}</td>
         <td>
-            <a href="{{ route('tickets.show', $ticket->id) }}">Open</a>
+            <a href="{{ route('tickets.agent.show', $ticket->id) }}">Open</a>
         </td>
     </tr>
     @endforeach
