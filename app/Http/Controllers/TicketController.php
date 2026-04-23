@@ -101,11 +101,22 @@ class TicketController extends Controller
 
     public function index(Request $request)
     {
-        $tickets = Ticket::latest()->paginate(10);
+        $query = Ticket::query();
 
-        return view('tickets.index', compact('tickets'));
+        if ($request->filled('search')) {
+            $search = $request->search;
 
-    }
+            $query->where(function ($q) use ($search) {
+                $q->where('ref', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%")
+                ->orWhere('subject', 'like', "%{$search}%");
+            });
+        }   
+
+    $tickets = $query->latest()->paginate(10);
+
+    return view('tickets.index', compact('tickets'));
+}
 
     public function updateStatus(Request $request, Ticket $ticket)
     {
