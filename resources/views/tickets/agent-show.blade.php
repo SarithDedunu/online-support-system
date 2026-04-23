@@ -7,9 +7,59 @@
 <h3>Agent Ticket View</h3>
 
 <div class="card mb-3">
-    <div class="card-body">
-        <h5>{{ $ticket->subject }}</h5>
-        <p>{{ $ticket->description }}</p>
+    <div class="card-body p-0">
+
+        <table class="table mb-0">
+            <tbody>
+
+                <tr>
+                    <th style="width: 30%">Reference</th>
+                    <td>{{ $ticket->ref }}</td>
+                </tr>
+
+                <tr>
+                    <th>Customer Name</th>
+                    <td>{{ $ticket->customer_name }}</td>
+                </tr>
+
+                <tr>
+                    <th>Email</th>
+                    <td>{{ $ticket->email }}</td>
+                </tr>
+
+                <tr>
+                    <th>Phone</th>
+                    <td>{{ $ticket->phone ?: 'N/A' }}</td>
+                </tr>
+
+                <tr>
+                    <th>Subject</th>
+                    <td class="fw-semibold">{{ $ticket->subject }}</td>
+                </tr>
+
+                <tr>
+                    <th>Description</th>
+                    <td>{{ $ticket->description }}</td>
+                </tr>
+
+                <tr>
+                    <th>Status</th>
+                    <td>
+                        @if($ticket->status == 0)
+                            <span class="badge bg-secondary">New</span>
+                        @elseif($ticket->status == 1)
+                            <span class="badge bg-warning text-dark">In Progress</span>
+                        @elseif($ticket->status == 2)
+                            <span class="badge bg-success">Resolved</span>
+                        @else
+                            <span class="badge bg-dark">Closed</span>
+                        @endif
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+
     </div>
 </div>
 
