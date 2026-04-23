@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\TicketCreated;
 use App\Models\Ticket;
 use App\Models\TicketReply;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class TicketController extends Controller
@@ -40,6 +42,9 @@ class TicketController extends Controller
             'ref' => strtoupper(Str::random(10)),
             'status' => 0,
         ]);
+
+         // Send email to customer
+        Mail::to($ticket->email)->send(new TicketCreated($ticket));
 
         return redirect()
             ->route('tickets.create')
