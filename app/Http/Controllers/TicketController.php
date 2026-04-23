@@ -51,16 +51,15 @@ class TicketController extends Controller
     }
 
 
-    public function reply(Request $request, Ticket $ticket)
+    public function replyAsCustomer(Request $request, Ticket $ticket)
     {
         $request->validate([
             'message' => 'required',
-            'sender_type' => 'required|in:customer,agent',
         ]);
 
         TicketReply::create([
             'ticket_id' => $ticket->id,
-            'sender_type' => $request->sender_type,
+            'sender_type' => 'customer',
             'message' => $request->message,
         ]);
 
@@ -68,6 +67,24 @@ class TicketController extends Controller
             ->route('tickets.show', $ticket->id)
             ->with('success', 'Reply added successfully.');
     }
+    
+    public function replyAsAgent(Request $request, Ticket $ticket)
+    {
+        $request->validate([
+            'message' => 'required',
+        ]);
+
+        TicketReply::create([
+            'ticket_id' => $ticket->id,
+            'sender_type' => 'agent',
+            'message' => $request->message,
+        ]);
+
+        return redirect()
+            ->route('tickets.agent.show', $ticket->id)
+            ->with('success', 'Agent reply was sent successfully.');
+    }
+
 
     public function show(Ticket $ticket)
     {
