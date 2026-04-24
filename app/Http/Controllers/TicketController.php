@@ -42,14 +42,14 @@ class TicketController extends Controller
             'ref' => strtoupper(Str::random(10)),
             'status' => 0,
         ]);
-
+     if ($ticket->save()) {
          // Send email to customer
-        Mail::to($ticket->email)->send(new TicketCreated($ticket));
+            Mail::to($ticket->email)->queue(new TicketCreated($ticket)); // Queue the email to be sent asynchronously send is changed to queue 
 
         return redirect()
-            ->route('tickets.create')
+            ->route('tickets.show', $ticket->id)
             ->with('success', 'Ticket created successfully. Your reference is: ' . $ticket->ref);
-    }
+    }}
 
     // -------------------------
     // TICKET SEARCH (CUSTOMER)
