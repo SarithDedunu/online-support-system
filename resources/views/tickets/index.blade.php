@@ -2,64 +2,94 @@
 
 @section('content')
 
-{{-- Back button --}}
 <a href="/" class="btn btn-secondary mb-3">← Back</a>
 
-<h3>Agent Ticket List</h3>
+<h3 class="mb-4">Agent Ticket List</h3>
 
-{{-- Search input --}}
-<form method="GET" class="mb-3">
-    <input type="text" name="search" class="form-control" placeholder="Search tickets">
+{{-- Search, filter and sort --}}
+<form method="GET" action="{{ route('tickets.index') }}" class="card card-body mb-4">
+    <div class="row g-2">
+        <div class="col-md-5">
+            <input
+                type="text"
+                name="search"
+                class="form-control"
+                placeholder="Search by ref, name, email, or subject"
+                value="{{ request('search') }}"
+            >
+        </div>
+
+        <div class="col-md-3">
+            <select name="status" class="form-select">
+                <option value="">All Statuses</option>
+                <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>New</option>
+                <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>In Progress</option>
+                <option value="2" {{ request('status') === '2' ? 'selected' : '' }}>Resolved</option>
+                <option value="3" {{ request('status') === '3' ? 'selected' : '' }}>Closed</option>
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <select name="sort" class="form-select">
+                <option value="latest" {{ request('sort') === 'latest' ? 'selected' : '' }}>Latest</option>
+                <option value="oldest" {{ request('sort') === 'oldest' ? 'selected' : '' }}>Oldest</option>
+            </select>
+        </div>
+
+        <div class="col-md-2 d-grid">
+            <button class="btn btn-success">Apply</button>
+        </div>
+    </div>
 </form>
 
-<table class="table table-bordered">
+@if($tickets->count())
+    <table class="table table-bordered align-middle">
+        <thead class="table-success">
+            <tr>
+                <th>Reference</th>
+                <th>Customer</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Opened Time</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
 
-    {{-- Table header --}}
-    <thead class="table-success">
-        <tr>
-            <th>Ref</th>
-            <th>Subject</th>
-            <th>Email</th>
-            <th>Status</th>
-            <th></th>
-        </tr>
-    </thead>
+        <tbody>
+            @foreach($tickets as $ticket)
+                <tr>
+                    <td>{{ $ticket->ref }}</td>
+                    <td>{{ $ticket->customer_name }}</td>
+                    <td>{{ $ticket->email }}</td>
+                    <td>{{ $ticket->phone ?: 'N/A' }}</td>
+                    <td>{{ $ticket->created_at->format('d/M/Y H:i:s') }}</td>
+                    <td>
+                        @if($ticket->status == 0)
+                            <span class="badge bg-secondary">New</span>
+                        @elseif($ticket->status == 1)
+                            <span class="badge bg-warning text-dark">In Progress</span>
+                        @elseif($ticket->status == 2)
+                            <span class="badge bg-success">Resolved</span>
+                        @else
+                            <span class="badge bg-dark">Closed</span>
+                        @endif
+                    </td>
+                    <td>
+                        <a href="{{ route('tickets.agent.show', $ticket->id) }}" class="btn btn-sm btn-primary">
+                            Open
+                        </a>
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
 
-    <tbody>
-
-        {{-- Loop tickets --}}
-        @foreach($tickets as $ticket)
-        <tr>
-            <td>{{ $ticket->ref }}</td>
-            <td>{{ $ticket->subject }}</td>
-            <td>{{ $ticket->email }}</td>
-
-            {{-- Status badge --}}
-            <td>
-                @if($ticket->status == 0) 
-                    <span class="badge bg-secondary">New</span>
-                @elseif($ticket->status == 1) 
-                    <span class="badge bg-warning text-dark">In Progress</span>
-                @elseif($ticket->status == 2) 
-                    <span class="badge bg-success">Resolved</span>
-                @else 
-                    <span class="badge bg-dark">Closed</span>
-                @endif
-            </td>
-
-            {{-- Open ticket --}}
-            <td>
-                <a href="{{ route('tickets.agent.show', $ticket->id) }}" class="btn btn-sm btn-primary">
-                    Open
-                </a>
-            </td>
-        </tr>
-        @endforeach
-
-    </tbody>
-</table>
-
-{{-- Pagination --}}
-{{ $tickets->links() }}
+    {{ $tickets->links() }}
+@else
+    <div class="alert alert-info">
+        No tickets found.
+    </div>
+@endif
 
 @endsection
