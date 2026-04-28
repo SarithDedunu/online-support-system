@@ -7,40 +7,58 @@
 <h3 class="mb-4">Agent Ticket List</h3>
 
 {{-- Search, filter and sort --}}
-<form method="GET" action="{{ route('tickets.index') }}" class="card card-body mb-4">
-    <div class="row g-2">
-        <div class="col-md-5">
-            <input
-                type="text"
-                name="search"
-                class="form-control"
-                placeholder="Search by ref, name, email, or subject"
-                value="{{ request('search') }}"
-            >
-        </div>
+<div class="card card-body mb-4">
+    <form method="GET" action="{{ route('tickets.index') }}">
+        <div class="row g-2">
 
-        <div class="col-md-3">
-            <select name="status" class="form-select">
-                <option value="">All Statuses</option>
-                <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>New</option>
-                <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>In Progress</option>
-                <option value="2" {{ request('status') === '2' ? 'selected' : '' }}>Resolved</option>
-                <option value="3" {{ request('status') === '3' ? 'selected' : '' }}>Closed</option>
-            </select>
-        </div>
+            {{-- Search input --}}
+            <div class="col-md-4">
+                <input
+                    type="text"
+                    name="search"
+                    class="form-control"
+                    placeholder="Reference, name, email or phone"
+                    value="{{ request('search') }}"
+                >
+            </div>
 
-        <div class="col-md-2">
-            <select name="sort" class="form-select">
-                <option value="latest" {{ request('sort') === 'latest' ? 'selected' : '' }}>Latest</option>
-                <option value="oldest" {{ request('sort') === 'oldest' ? 'selected' : '' }}>Oldest</option>
-            </select>
-        </div>
+            {{-- Status filter --}}
+            <div class="col-md-2">
+                <select name="status" class="form-select">
+                    <option value="">All Status</option>
+                    <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>New</option>
+                    <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>In Progress</option>
+                    <option value="2" {{ request('status') === '2' ? 'selected' : '' }}>Resolved</option>
+                    <option value="3" {{ request('status') === '3' ? 'selected' : '' }}>Closed</option>
+                </select>
+            </div>
 
-        <div class="col-md-2 d-grid">
-            <button class="btn btn-success">Apply</button>
+            {{-- Sort column --}}
+            <div class="col-md-2">
+                <select name="sort" class="form-select">
+                    <option value="created_at">Opened Time</option>
+                    <option value="customer_name">Customer Name</option>
+                    <option value="updated_at">Last Updated</option>
+                    <option value="status">Status</option>
+                </select>
+            </div>
+
+            {{-- Sort direction --}}
+            <div class="col-md-2">
+                <select name="direction" class="form-select">
+                    <option value="desc">Descending</option>
+                    <option value="asc">Ascending</option>
+                </select>
+            </div>
+
+            {{-- Submit --}}
+            <div class="col-md-2 d-grid">
+                <button class="btn btn-success">Apply</button>
+            </div>
+
         </div>
-    </div>
-</form>
+    </form>
+</div>
 
 @if($tickets->count())
     <table class="table table-bordered align-middle">

@@ -153,14 +153,14 @@ public function index(Request $request)
     }
 
     // Sort tickets
-    if ($request->sort === 'oldest') {
-        $query->oldest();
-    } else {
-        $query->latest();
-    }
-
+if ($request->filled('sort')) {
+    $direction = $request->get('direction', 'desc');
+    $query->orderBy($request->sort, $direction);
+} else {
+    $query->latest();
+}
     // Paginate results
-    $tickets = $query->paginate(3)->withQueryString();
+    $tickets = $query->paginate(5)->withQueryString();
 
     return view('tickets.index', compact('tickets'));
 }
