@@ -160,7 +160,7 @@ public function index(Request $request)
     }
 
     // Paginate results
-    $tickets = $query->paginate(10)->withQueryString();
+    $tickets = $query->paginate(3)->withQueryString();
 
     return view('tickets.index', compact('tickets'));
 }

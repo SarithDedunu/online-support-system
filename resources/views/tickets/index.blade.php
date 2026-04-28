@@ -85,7 +85,12 @@
         </tbody>
     </table>
 
-    {{ $tickets->links() }}
+    {{-- Pagination with result summary --}}
+    {{-- Pagination --}}
+<div class="d-flex justify-content-end mt-4">
+    {{ $tickets->links('pagination::bootstrap-5') }}
+</div>
+
 @else
     <div class="alert alert-info">
         No tickets found.
@@ -93,3 +98,5 @@
 @endif
 
 @endsection
+
+
