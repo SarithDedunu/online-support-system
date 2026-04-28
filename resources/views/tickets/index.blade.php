@@ -33,21 +33,22 @@
                 </select>
             </div>
 
-            {{-- Sort column --}}
+            {{-- Sort column (controls ORDER BY column)--}}
             <div class="col-md-2">
-                <select name="sort" class="form-select">
-                    <option value="created_at">Opened Time</option>
-                    <option value="customer_name">Customer Name</option>
-                    <option value="updated_at">Last Updated</option>
-                    <option value="status">Status</option>
+                <select class="form-control" name="sort">
+                    <option value="customer_name" {{ request('sort', 'customer_name') == 'customer_name' ? 'selected' : null }}>Customer Name</option>
+                    <option value="created_at" {{ request('sort', 'created_at') == 'created_at' ? 'selected' : null }}>Opened Time</option>
+                    <option value="updated_at" {{ request('sort', 'updated_at') == 'updated_at' ? 'selected' : null }}>Last Updated Time</option>
+                    <option value="status" {{ request('sort', 'status') == 'status' ? 'selected' : null }}>Status</option>
                 </select>
             </div>
 
             {{-- Sort direction --}}
             <div class="col-md-2">
                 <select name="direction" class="form-select">
-                    <option value="desc">Descending</option>
-                    <option value="asc">Ascending</option>
+                    <option value="asc" {{ request('sort_dir', 'asc') == 'asc' ? 'selected' : null }}>Ascending</option>
+                    <option value="desc" {{ request('sort_dir', 'desc') == 'desc' ? 'selected' : null }}>Descending</option>
+            </select>
                 </select>
             </div>
 
