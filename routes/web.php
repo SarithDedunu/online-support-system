@@ -35,7 +35,6 @@ Route::patch('/tickets/{ticket}/close', [TicketController::class, 'closeTicket']
 // AGENT ROUTES
 // -------------------------
 
-Route::middleware(['is.agent'])->group(function () {
 
     // Agent dashboard
     Route::get('/agent/tickets', [TicketController::class, 'index'])
@@ -49,7 +48,7 @@ Route::middleware(['is.agent'])->group(function () {
     Route::post('/agent/tickets/{ticket}/reply', [TicketController::class, 'replyAsAgent'])
         ->name('tickets.reply.agent');
 
-});
+
 
 
 // -------------------------

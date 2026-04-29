@@ -130,25 +130,40 @@ class TicketController extends Controller
     // AGENT DASHBOARD
     // -------------------------
 
-    public function index(Request $request)
-    {
-        $query = Ticket::query();
+public function index(Request $request)
+{
+    // Start ticket query
+    $query = Ticket::query();
 
-        // Search filter
-        if ($request->filled('search')) {
-            $search = $request->search;
+    // Search by reference, customer name, email, or subject
+    if ($request->filled('search')) {
+        $search = $request->search;
 
-            $query->where(function ($q) use ($search) {
-                $q->where('ref', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('subject', 'like', "%{$search}%");
-            });
-        }
-
-        $tickets = $query->latest()->paginate(10);
-
-        return view('tickets.index', compact('tickets'));
+        $query->where(function ($q) use ($search) {
+            $q->where('ref', 'like', "%{$search}%")
+              ->orWhere('customer_name', 'like', "%{$search}%")
+              ->orWhere('email', 'like', "%{$search}%")
+              ->orWhere('subject', 'like', "%{$search}%");
+        });
     }
+
+    // Filter by status
+    if ($request->filled('status')) {
+        $query->where('status', $request->status);
+    }
+
+    // Sort tickets
+if ($request->filled('sort')) {
+    $direction = $request->get('direction', 'desc');
+    $query->orderBy($request->sort, $direction);
+} else {
+    $query->latest();
+}
+    // Paginate results
+    $tickets = $query->paginate(5)->withQueryString();
+
+    return view('tickets.index', compact('tickets'));
+}
 
     // -------------------------
     // STATUS MANAGEMENT
