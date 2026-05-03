@@ -7,6 +7,7 @@ use App\Models\Ticket;
 use App\Models\TicketReply;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class TicketController extends Controller
@@ -132,7 +133,7 @@ class TicketController extends Controller
 
 public function index(Request $request)
 {
-    // Start ticket query
+    // Start ticket query - get all tickets
     $query = Ticket::query();
 
     // Search by reference, customer name, email, or subject
@@ -152,13 +153,23 @@ public function index(Request $request)
         $query->where('status', $request->status);
     }
 
+    // Filter by assignment (optional - show all tickets to all agents)
+    if ($request->filled('assigned')) {
+        if ($request->assigned === 'me') {
+            $query->where('assigned_to', auth()->id());
+        } elseif ($request->assigned === 'unassigned') {
+            $query->whereNull('assigned_to');
+        }
+    }
+
     // Sort tickets
-if ($request->filled('sort')) {
-    $direction = $request->get('direction', 'desc');
-    $query->orderBy($request->sort, $direction);
-} else {
-    $query->latest();
-}
+    if ($request->filled('sort')) {
+        $direction = $request->get('direction', 'desc');
+        $query->orderBy($request->sort, $direction);
+    } else {
+        $query->latest();
+    }
+
     // Paginate results
     $tickets = $query->paginate(5)->withQueryString();
 
@@ -201,5 +212,21 @@ if ($request->filled('sort')) {
         return redirect()
             ->route('tickets.show', $ticket->id)
             ->with('success', 'Your ticket was closed successfully.');
+    }
+
+    // -------------------------
+    // TICKET ASSIGNMENT
+    // -------------------------
+
+    // Agent assigns ticket to themselves
+    public function assignToMe(Request $request, Ticket $ticket)
+    {
+        $ticket->update([
+            'assigned_to' => Auth::id(),
+        ]);
+
+        return redirect()
+            ->route('tickets.agent.show', $ticket->id)
+            ->with('success', 'Ticket assigned to you successfully.');
     }
 }
