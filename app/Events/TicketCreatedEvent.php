@@ -12,7 +12,7 @@ class TicketCreatedEvent
 
     public Ticket $ticket; // Stores created ticket data
 
-    // Receive ticket data when event is created
+    // Receive ticket data when event is disppatched
     public function __construct(Ticket $ticket)
     {
         $this->ticket = $ticket;
