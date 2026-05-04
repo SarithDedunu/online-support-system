@@ -2,30 +2,30 @@
 
 namespace App\Mail;
 
-use App\Models\Ticket; // Imports the Ticket model and allows to use Ticket class
-use Illuminate\Bus\Queueable; // Imports the Queueable trait, which allows the email to be queued for later sending
-use Illuminate\Mail\Mailable; // Base class for all email messages in Laravel
-use Illuminate\Contracts\Queue\ShouldQueue; // Interface that tells Laravel this mail should be sent using a queue.
-use Illuminate\Queue\SerializesModels; // Helps serialize Eloquent models, Instead of storing full object data, it stores the model ID and reloads it later.
+use App\Models\Ticket; // Ticket model used to pass ticket data to email
+use Illuminate\Bus\Queueable; // Allows this mail to be pushed to queue
+use Illuminate\Contracts\Queue\ShouldQueue; // Marks this mail as queueable
+use Illuminate\Mail\Mailable; // Base Laravel email class
+use Illuminate\Queue\SerializesModels; // Safely serializes model data for queue
 
-class TicketCreated extends Mailable
+class TicketCreated extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    public $ticket;
+    public $ticket; // Stores ticket data for the email view
 
-     // Store ticket data for the email
+    // Receive ticket data when creating the email
     public function __construct(Ticket $ticket)
     {
         $this->ticket = $ticket;
     }
 
-    // Build the email content
+    // Build email subject and body
     public function build()
     {
         return $this->subject('New support ticket opened: ' . $this->ticket->ref)
                     ->view('mails.ticket-created', [
-                        'ticket' => $this->ticket
+                        'ticket' => $this->ticket,
                     ]);
     }
 }

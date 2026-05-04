@@ -14,9 +14,16 @@ class Ticket extends Model
         'description',
         'ref',
         'status',
+        'assigned_to',
     ];
-        public function replies()
+
+    public function replies()
     {
         return $this->hasMany(TicketReply::class);
+    }
+
+    public function assignedAgent()
+    {
+        return $this->belongsTo(User::class, 'assigned_to');
     }
 }

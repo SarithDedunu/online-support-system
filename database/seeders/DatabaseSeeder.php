@@ -1,25 +1,31 @@
 <?php
 
-namespace Database\Seeders;
+namespace App\Http\Controllers;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class DatabaseSeeder extends Seeder
+class LoginController extends Controller
 {
-    use WithoutModelEvents;
-
-    /**
-     * Seed the application's database.
-     */
-    public function run(): void
+    public function login(Request $request)
     {
-        // User::factory(10)->create();
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+
+            if (Auth::user()->role === 'agent') {
+                return redirect()->route('agent.tickets');
+            }
+
+            return redirect()->route('tickets.index');
+        }
+
+        return back()->withErrors([
+            'email' => 'Invalid email or password.',
         ]);
     }
 }
