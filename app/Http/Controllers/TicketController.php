@@ -31,7 +31,7 @@ class TicketController extends Controller
             'email' => 'required|email',
             'subject' => 'required|max:255',
             'description' => 'required',
-            'phone' => 'nullable|digits_between:1,10',
+            'phone' => 'required|digits:10',
         ]);
 
         // Create ticket
