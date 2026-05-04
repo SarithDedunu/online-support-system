@@ -9,7 +9,7 @@
 
         {{-- Customer Section --}}
         <div class="mb-5">
-            <h5 class="text-secondary mb-3">👤 Customer Support</h5>
+            <h5 class="text-secondary mb-3">Customer Support</h5>
             
             <div class="mb-3">
                 <a href="{{ route('tickets.create') }}" class="btn btn-primary px-4 py-2">
@@ -41,7 +41,7 @@
 
         {{-- Agent Section --}}
         <div>
-            <h5 class="text-secondary mb-3">🔐 Agent Portal</h5>
+            <h5 class="text-secondary mb-3">Agent Portal</h5>
             
             @auth
                 <p class="mb-3 text-success">Welcome, <strong>{{ Auth::user()->name }}</strong>!</p>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\TicketCreatedEvent;
 use App\Mail\TicketCreated;
 use App\Models\Ticket;
 use App\Models\TicketReply;
@@ -30,7 +31,7 @@ class TicketController extends Controller
             'email' => 'required|email',
             'subject' => 'required|max:255',
             'description' => 'required',
-            'phone' => 'nullable|max:50',
+            'phone' => 'nullable|digits_between:1,10',
         ]);
 
         // Create ticket
@@ -43,14 +44,14 @@ class TicketController extends Controller
             'ref' => strtoupper(Str::random(10)),
             'status' => 0,
         ]);
-     if ($ticket->save()) {
-         // Send email to customer
-            Mail::to($ticket->email)->queue(new TicketCreated($ticket)); // Queue the email to be sent asynchronously send is changed to queue 
+        
+        // Dispatch event after ticket is created
+        TicketCreatedEvent::dispatch($ticket);
 
         return redirect()
             ->route('tickets.show', $ticket->id)
             ->with('success', 'Ticket created successfully. Your reference is: ' . $ticket->ref);
-    }}
+    }
 
     // -------------------------
     // TICKET SEARCH (CUSTOMER)
