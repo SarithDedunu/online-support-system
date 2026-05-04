@@ -1,31 +1,40 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Database\Seeders;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
 
-class LoginController extends Controller
+class DatabaseSeeder extends Seeder
 {
-    public function login(Request $request)
+    use WithoutModelEvents;
+
+    /**
+     * Seed the application's database.
+     */
+    public function run(): void
     {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+        // Create or update default admin user
+        // Password can be hashed automatically if User model has: 'password' => 'hashed'
+        User::updateOrCreate(
+            ['email' => 'admin@gmail.com'],
+            [
+                'name' => 'Admin User',
+                'password' => 'password123',
+                'role' => 'admin',
+            ]
+        );
 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-
-            if (Auth::user()->role === 'agent') {
-                return redirect()->route('agent.tickets');
-            }
-
-            return redirect()->route('tickets.index');
-        }
-
-        return back()->withErrors([
-            'email' => 'Invalid email or password.',
-        ]);
+        // Create or update default support agent user
+        // Password can be hashed automatically if User model has: 'password' => 'hashed'
+        User::updateOrCreate(
+            ['email' => 'agent@example.com'],
+            [
+                'name' => 'John - Support Agent',
+                'password' => 'agentpassword',
+                'role' => 'agent',
+            ]
+        );
     }
 }
