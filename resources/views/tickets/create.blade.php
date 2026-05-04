@@ -52,9 +52,21 @@
     @enderror
 
     {{-- Phone (optional) --}}
-    <label>Phone</label>
-    <input class="form-control mb-2"
-           name="phone" value="{{ old('phone') }}">
+{{-- Phone number is required and must contain 10 digits --}}
+<label>Phone <span class="text-danger">*</span></label>
+<input
+    type="text"
+    name="phone"
+    class="form-control mb-2 @error('phone') is-invalid @enderror"
+    value="{{ old('phone') }}"
+    inputmode="numeric"
+    maxlength="10"
+    placeholder="0771234567"
+>
+
+@error('phone')
+    <div class="invalid-feedback">{{ $message }}</div>
+@enderror
 
     {{-- Ticket Subject (required) --}}
     <label>Subject <span class="text-danger">*</span></label>
